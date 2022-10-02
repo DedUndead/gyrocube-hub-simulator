@@ -46,6 +46,10 @@ class MessageTag(enum.IntEnum):
     HUB_HARDWARE_ERROR         = 0x0B
     MQTT_UNKNOWN_MESSAGE_ERROR = 0x0C
 
+    @classmethod
+    def has(cls, value):
+        return value in cls._value2member_map_
+
 
 class Message:
     """ Base message class
@@ -77,6 +81,10 @@ class Message:
 
     def __call__(self):
         return str(self)
+
+    @classmethod
+    def from_json(cls):
+        pass
 
 
 class CubeJoinedSignal(Message):
