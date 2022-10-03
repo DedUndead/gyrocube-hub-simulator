@@ -14,15 +14,19 @@ class MessageType(enum.IntEnum):
 
 
 class MqttTopic(enum.Enum):
-    CONFIG       = "/config"       # Configuration of the cubes
-    MEASUREMENTS = "/measurement"  # Measurements related info
-    CUBE_STATE   = "/cube"         # Updates from cubes
-    NETWORK      = "/network"      # Network updates
-    ERROR        = "/error"        # Errors
+    CONFIG       = "gyro/config"       # Configuration of the cubes
+    MEASUREMENTS = "gyro/measurement"  # Measurements related info
+    CUBE_STATE   = "gyro/cube"         # Updates from cubes
+    NETWORK      = "gyro/network"      # Network updates
+    ERROR        = "gyro/error"        # Errors
+
+    @classmethod
+    def values(cls):
+        return cls._value2member_map_
 
     @classmethod
     def has(cls, value):
-        return value in cls._value2member_map_
+        return value in cls.values()
 
 
 class MessageTag(enum.IntEnum):
