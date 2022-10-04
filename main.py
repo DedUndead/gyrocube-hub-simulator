@@ -5,7 +5,7 @@
 import time
 import random
 
-from communication.messages import CubeJoinedSignal, CubeDisconnectedSignal
+from communication.messages import CubeJoinedSignal, CubeDisconnectedSignal, CubeFlippedSignal, CubeConfigIndication
 from communication.mqtt_handler import MqttHandler
 from testing.utils import Network
 
@@ -31,19 +31,32 @@ def test_active_scenario(number_of_cubes: int,
 
     while True:
         # Random join event
+        # <- CubeJoined signal to /network
+        # <- CubeConfigIndication signal to /config
         cube_joined_probability = random.randint(1, 100)
         if cube_joined_probability > 50 and not network.full:
             new_cube_id = network.join()
             mqtt.publish(CubeJoinedSignal(new_cube_id))
+            new_cube = network.get_cube_by_id(new_cube_id)
+            mqtt.publish(CubeConfigIndication(new_cube.side, new_cube.id))
 
         # Random exit event
+        # <- CubeDisconnected signal to /network
         cube_disconnected_probability = random.randint(1, 100)
         if cube_disconnected_probability > 75 and not network.empty:
             cube_id = network.exit()
             mqtt.publish(CubeDisconnectedSignal(cube_id))
 
         # Random flip event
+        # <- CubeFlipped signal to /cube
+        cube_flip_probability = random.randint(1, 100)
+        if cube_flip_probability > 20 and not network.empty:
+            cube = random.choice(network.network)
 
+            old_side = cube.side
+            cube.flip()
+            new_side = cube.side
+            mqtt.publish(CubeFlippedSignal(cube.id, old_side, new_side))
 
         time.sleep(random.randint(min_gap_between_transmissions, max_gap_between_transmissions))
 
