@@ -15,6 +15,11 @@ def _on_connect(client, userdata, flags, rc):
     print("Connection to server %s established. Returned code: %d", ["was", "was not"][bool(rc)], rc)
 
 
+def _on_subscribe(client, userdata, mid, granted_qos):
+    """ On subscribe callback """
+    print("Successfully subscribed.")
+
+
 def _on_message(client, userdata, message):
     """ On message callback """
     print("RECEIVED:", message.payload)
@@ -45,6 +50,10 @@ def _on_message(client, userdata, message):
     # TODO: Handle requests
 
 
+def _on_publish():
+    pass
+
+
 class MqttHandler:
 
     def __init__(self, host: str, port: int):
@@ -52,10 +61,13 @@ class MqttHandler:
 
         self.client.on_connect = _on_connect
         self.client.on_message = _on_message
+        self.client.on_subscribe = _on_subscribe
+        self.client.on_publish = _on_publish
 
         self.client.connect(host, port)
         for topic in MqttTopic.values():
-            self.client.subscribe()
+            print("Subscribing to topic %s", topic)
+            self.client.subscribe(topic)
 
     def __del__(self):
         self.client.disconnect()
@@ -64,7 +76,7 @@ class MqttHandler:
         if topic is None:
             topic = msg.mtopic
 
-        pub_info = self.client.publish(topic, msg)
+        pub_info = self.client.publish(topic, str(msg))
         if pub_info.rc:
             print("Error when sensing the message. Return code %d", pub_info.rc)
         else:

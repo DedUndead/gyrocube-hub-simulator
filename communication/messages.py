@@ -2,6 +2,7 @@
 # The origin must be mentioned in all copied, modified or distributed pieces:
 # <link>
 # 2022, GyroCube
+import json
 import enum
 import time
 import copy
@@ -78,17 +79,13 @@ class Message:
         Exclude MQTT topic from representation of the class,
         since it is not   a part of the actual message
         """
-        json = copy.deepcopy(self.__dict__)
-        del json["mtopic"]
+        modified_dict = copy.deepcopy(self.__dict__)
+        del modified_dict["mtopic"]
 
-        return str(json)
+        return json.dumps(modified_dict)
 
     def __call__(self):
         return str(self)
-
-    @classmethod
-    def from_json(cls):
-        pass
 
 
 class CubeJoinedSignal(Message):
