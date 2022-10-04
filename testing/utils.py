@@ -48,11 +48,11 @@ class Network:
 
     def join(self, cube_id: Optional[int] = None) -> Cube:
         """ Make new cube join network """
-        assert cube_id not in self.addresses, "Specified address %d is already in use" % cube_id
-        assert 0x00 < cube_id < 0xff, "Specified address %d is out of [%d; %d] range" % (cube_id, 0x00, 0xff)
-
         if cube_id is None:
             cube_id = self.get_unique_cube_id()
+        assert 0x00 < cube_id < 0xff, "Specified address %d is out of [%d; %d] range" % (cube_id, 0x00, 0xff)
+        assert cube_id not in self.addresses, "Specified address %d is already in use" % cube_id
+
         new_cube = Cube(cube_id)
         self.network.append(new_cube)
 
