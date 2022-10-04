@@ -35,9 +35,8 @@ def test_active_scenario(number_of_cubes: int,
         # <- CubeConfigIndication signal to /config
         cube_joined_probability = random.randint(1, 100)
         if cube_joined_probability > 50 and not network.full:
-            new_cube_id = network.join()
-            mqtt.publish(CubeJoinedSignal(new_cube_id))
-            new_cube = network.get_cube_by_id(new_cube_id)
+            new_cube = network.join()
+            mqtt.publish(CubeJoinedSignal(new_cube.id))
             mqtt.publish(CubeConfigIndication(new_cube.side, new_cube.id))
 
         # Random exit event

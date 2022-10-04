@@ -46,28 +46,29 @@ class Network:
         """ Indicates all addresses """
         return [cube.id for cube in self.network]
 
-    def join(self, cube_id: Optional[int] = None) -> int:
+    def join(self, cube_id: Optional[int] = None) -> Cube:
         """ Make new cube join network """
         assert cube_id not in self.addresses, "Specified address %d is already in use" % cube_id
         assert 0x00 < cube_id < 0xff, "Specified address %d is out of [%d; %d] range" % (cube_id, 0x00, 0xff)
 
         if cube_id is None:
             cube_id = self.get_unique_cube_id()
-        self.network.append(Cube(cube_id))
+        new_cube = Cube(cube_id)
+        self.network.append(new_cube)
 
-        return cube_id
+        return new_cube
 
-    def exit(self, cube_id: Optional[int] = None) -> int:
+    def exit(self, id_to_remove: Optional[int] = None) -> int:
         """ Remove cube from the network """
         assert not self.empty, "Network is empty"
 
-        if cube_id is None:
-            cube_id = random.choice(self.network)
-        assert cube_id in self.addresses, "Specified address %d is not in use" % cube_id
+        if id_to_remove is None:
+            id_to_remove = random.choice(self.network)
+        assert id_to_remove in self.addresses, "Specified address %d is not in use" % id_to_remove
 
-        self.network.remove(cube_id)
+        self.network = filter(lambda cube: cube.id != id_to_remove, self.network)
 
-        return cube_id
+        return id_to_remove
 
     def get_unique_cube_id(self) -> int:
         assert not self.full and len(self.network) < 0xff, "Network is full"
