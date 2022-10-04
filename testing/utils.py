@@ -13,9 +13,12 @@ class Cube:
         self.id = _id
         self.side = random.randint(1, 6)
 
-    def flip(self, _id: int) -> None:
-        self.id = _id
-        self.side = random.randint(1, 6)
+    def flip(self, side: Optional[int] = None) -> None:
+        if side is None:
+            side = random.randint(1, 6)
+        assert 0 <= side <= 6, "Incorrect side number"
+
+        self.side = side
 
 
 class Network:
