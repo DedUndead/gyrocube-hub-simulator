@@ -14,6 +14,35 @@ HOST_ADDRESS = "insert_server_address"
 PORT = 0
 
 
+def test_cube_flipping_scenarion(number_of_cubes: int,
+                                 min_gap_between_transmissions: int,
+                                 max_gap_between_transmissions: int):
+    """
+    Cube flipping scenaraio starts with filled network of specified size.
+    Cubes are periodically flipped.
+
+    :param number_of_cubes: Number of cubes in the network
+    :param min_gap_between_transmissions: Minimal time-gap between transmissions
+    :param max_gap_between_transmissions: Maximum time-gap between transmissions
+    """
+    network = Network(size=number_of_cubes)
+    mqtt = MqttHandler(HOST_ADDRESS, PORT)
+
+    for _ in range(number_of_cubes):
+        network.join()
+
+    while True:
+        cube = random.choice(network.network)
+
+        old_side = cube.side
+        cube.flip()
+        new_side = cube.side
+        mqtt.publish(CubeFlippedSignal(cube.id, old_side, new_side))
+        mqtt.publish(CubeConfigIndication(cube.id, cube.side, cube.config))
+
+        time.sleep(random.randint(min_gap_between_transmissions, max_gap_between_transmissions))
+
+
 def test_active_scenario(number_of_cubes: int,
                          min_gap_between_transmissions: int,
                          max_gap_between_transmissions: int):
@@ -62,4 +91,5 @@ def test_active_scenario(number_of_cubes: int,
 
 
 if __name__ == "__main__":
-    test_active_scenario(number_of_cubes=3, min_gap_between_transmissions=2, max_gap_between_transmissions=5)
+    #test_active_scenario(number_of_cubes=3, min_gap_between_transmissions=2, max_gap_between_transmissions=5)
+    #test_cube_flipping_scenarion(number_of_cubes=1, min_gap_between_transmissions=2, max_gap_between_transmissions=5)
