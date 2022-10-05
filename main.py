@@ -5,8 +5,7 @@
 import time
 import random
 
-from communication.messages import CubeJoinedSignal, CubeDisconnectedSignal, CubeFlippedSignal, CubeConfigIndication, \
-    SideConfig
+from communication.messages import CubeJoinedSignal, CubeDisconnectedSignal, CubeFlippedSignal, CubeConfigIndication
 from communication.mqtt_handler import MqttHandler
 from testing.utils import Network
 
@@ -91,5 +90,5 @@ def test_active_scenario(number_of_cubes: int,
 
 
 if __name__ == "__main__":
-    #test_active_scenario(number_of_cubes=3, min_gap_between_transmissions=2, max_gap_between_transmissions=5)
+    test_active_scenario(number_of_cubes=3, min_gap_between_transmissions=2, max_gap_between_transmissions=5)
     #test_cube_flipping_scenarion(number_of_cubes=1, min_gap_between_transmissions=2, max_gap_between_transmissions=5)
