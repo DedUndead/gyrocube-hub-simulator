@@ -6,6 +6,7 @@ import json
 from typing import Optional
 
 import paho.mqtt.client as mqtt
+import paho.mqtt.publish as publish
 
 from communication.messages import MqttUnknownMessageError, MqttTopic, MessageTag, MessageType, Message
 
@@ -81,3 +82,11 @@ class MqttHandler:
             print("Error when sensing the message. Return code %d", pub_info.rc)
         else:
             print("SENT:", msg)
+
+    @classmethod
+    def tx_single(cls, hostname, msg: Message, topic: Optional[MqttTopic] = None) -> None:
+        if topic is None:
+            topic = msg.mtopic
+
+        publish.single(topic, str(msg), hostname)
+        print("SENT:", msg)

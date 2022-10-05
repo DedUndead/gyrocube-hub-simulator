@@ -13,6 +13,14 @@ HOST_ADDRESS = "insert_server_address"
 PORT = 0
 
 
+def test_single_message():
+    """ Template for sending single messages """
+    # See message constructors in communication.messages
+    message = CubeFlippedSignal(cube_id=0xAA, old=1, new=5)
+
+    MqttHandler.tx_single(HOST_ADDRESS, message)
+
+
 def test_cube_flipping_scenarion(number_of_cubes: int,
                                  min_gap_between_transmissions: int,
                                  max_gap_between_transmissions: int):
