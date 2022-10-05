@@ -85,6 +85,7 @@ class MqttHandler:
 
     @classmethod
     def tx_single(cls, hostname, msg: Message, topic: Optional[MqttTopic] = None) -> None:
+        """ Perform quick transmission without specifing thje"""
         if topic is None:
             topic = msg.mtopic
 

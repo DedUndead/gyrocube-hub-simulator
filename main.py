@@ -9,6 +9,7 @@ from communication.messages import CubeJoinedSignal, CubeDisconnectedSignal, Cub
 from communication.mqtt_handler import MqttHandler
 from testing.utils import Network
 
+
 HOST_ADDRESS = "insert_server_address"
 PORT = 0
 
