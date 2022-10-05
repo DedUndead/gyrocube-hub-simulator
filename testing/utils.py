@@ -24,6 +24,7 @@ class Cube:
         if side is None:
             side = random.randint(1, 6)
         assert 0 <= side <= 6, "Incorrect side number"
+        self.side = side
 
         color = "%03x" % random.randint(0, 0xFFF)
         self.config.color = color
@@ -71,10 +72,10 @@ class Network:
         assert not self.empty, "Network is empty"
 
         if id_to_remove is None:
-            id_to_remove = random.choice(self.network)
+            id_to_remove = random.choice([cube.id for cube in self.network])
         assert id_to_remove in self.addresses, "Specified address %d is not in use" % id_to_remove
 
-        self.network = filter(lambda cube: cube.id != id_to_remove, self.network)
+        self.network = list(filter(lambda cube: cube.id != id_to_remove, self.network))
 
         return id_to_remove
 
