@@ -85,7 +85,12 @@ class MqttHandler:
 
     @classmethod
     def tx_single(cls, hostname, msg: Message, topic: Optional[MqttTopic] = None) -> None:
-        """ Perform quick transmission without specifing thje"""
+        """ Perform quick transmission without initializing the client
+
+        :param hostname: MQTT broker server address
+        :param msg: HUB-CLOUD message to be sent
+        :param topic: Topic. If None provided, appropriate topic for message type is chosen
+        """
         if topic is None:
             topic = msg.mtopic
 

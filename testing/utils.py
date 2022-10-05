@@ -12,14 +12,18 @@ class Cube:
     """ The class describes cube """
 
     def __init__(self, _id: int):
+        """
+        Initialize cube with specified _id
+        Assign random initial side, random side configuration
+        """
         self.id = _id
         self.side = random.randint(1, 6)
 
-        color = "%03x" % random.randint(0, 0xFFF)
+        color = "%06x" % random.randint(0, 0xFFFFFF)
         self.config = SideConfig(color=color)
 
     def flip(self, side: Optional[int] = None) -> None:
-        """ Flip cube and generate new random color """
+        """ Flip cube and generate new random side config """
 
         if side is None:
             side = random.randint(1, 6)
@@ -34,9 +38,7 @@ class Network:
     """ The class describes cube network """
 
     def __init__(self, size: int):
-        """
-        :param size: Network size
-        """
+        """ :param size: Network size """
         self.network: List[Cube] = []
         self.size = size
 
