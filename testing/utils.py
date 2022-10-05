@@ -5,6 +5,8 @@
 import random
 from typing import List, Optional
 
+from communication.messages import SideConfig
+
 
 class Cube:
     """ The class describes cube """
@@ -13,12 +15,18 @@ class Cube:
         self.id = _id
         self.side = random.randint(1, 6)
 
+        color = "%03x" % random.randint(0, 0xFFF)
+        self.config = SideConfig(color=color)
+
     def flip(self, side: Optional[int] = None) -> None:
+        """ Flip cube and generate new random color """
+
         if side is None:
             side = random.randint(1, 6)
         assert 0 <= side <= 6, "Incorrect side number"
 
-        self.side = side
+        color = "%03x" % random.randint(0, 0xFFF)
+        self.config.color = color
 
 
 class Network:

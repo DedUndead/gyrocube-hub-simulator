@@ -56,6 +56,13 @@ class MessageTag(enum.IntEnum):
         return value in cls._value2member_map_
 
 
+class SideConfig:
+    """ Side configuration format """
+
+    def __init__(self, color: str):
+        self.color = color
+
+
 class Message:
     """ Base message class
 
@@ -132,9 +139,10 @@ class CubeFlippedSignal(Message):
 
 class CubeConfigIndication(Message):
     """ Signal containing configuration of the specific side """
-    def __init__(self, side_idx: int, cube_id: int):
+    def __init__(self,  cube_id: int, side_idx: int, config: SideConfig):
         self.side_idx = side_idx
         self.cube_id = cube_id
+        self.config = config.__dict__
         super().__init__(MessageType.SIGNAL, MqttTopic.CONFIG, MessageTag.CUBE_SIDE_CONFIG)
 
 
