@@ -40,6 +40,7 @@ def test_cube_flipping_scenarion(number_of_cubes: int,
         network.join()
 
     while True:
+        print("EVENT: CUBE FLIPPED")
         cube = random.choice(network.network)
 
         old_side = cube.side
@@ -71,8 +72,8 @@ def test_active_scenario(number_of_cubes: int,
         # Random join event
         # <- CubeJoined signal to /network
         # <- CubeConfigIndication signal to /config
-        cube_joined_probability = random.randint(1, 100)
         if random.randint(1, 100) > 50 and not network.full:
+            print("EVENT: CUBE JOINED NETWORK")
             new_cube = network.join()
             mqtt.publish(CubeJoinedSignal(new_cube.id))
             mqtt.publish(CubeConfigIndication(new_cube.id, new_cube.side, new_cube.config))
@@ -80,6 +81,7 @@ def test_active_scenario(number_of_cubes: int,
         # Random exit event
         # <- CubeDisconnected signal to /network
         elif random.randint(1, 100) > 75 and not network.empty:
+            print("EVENT: CUBE EXITED NETWORK")
             cube_id = network.exit()
             mqtt.publish(CubeDisconnectedSignal(cube_id))
 
@@ -87,6 +89,7 @@ def test_active_scenario(number_of_cubes: int,
         # <- CubeFlipped signal to /cube
         # <- CubeConfigIndication signal to /config
         elif random.randint(1, 100) > 20 and not network.empty:
+            print("EVENT: CUBE FLIPPED")
             cube = random.choice(network.network)
 
             old_side = cube.side
