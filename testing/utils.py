@@ -30,7 +30,7 @@ class Cube:
         assert 0 <= side <= 6, "Incorrect side number"
         self.side = side
 
-        color = "%03x" % random.randint(0, 0xFFF)
+        color = "%06x" % random.randint(0, 0xFFF)
         self.config.color = color
 
 

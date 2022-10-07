@@ -3,6 +3,7 @@
 # <link>
 # 2022, GyroCube
 import json
+from time import sleep
 from typing import Optional
 
 import paho.mqtt.client as mqtt
@@ -51,7 +52,7 @@ def _on_message(client, userdata, message):
     # TODO: Handle requests
 
 
-def _on_publish():
+def _on_publish(client, userdata, mid):
     pass
 
 
@@ -67,7 +68,7 @@ class MqttHandler:
 
         self.client.connect(host, port)
         for topic in MqttTopic.values():
-            print("Subscribing to topic %s", topic)
+            print("Subscribing to topic", topic)
             self.client.subscribe(topic)
 
     def __del__(self):

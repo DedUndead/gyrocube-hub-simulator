@@ -10,8 +10,8 @@ from communication.mqtt_handler import MqttHandler
 from testing.utils import Network
 
 
-HOST_ADDRESS = "insert_server_address"
-PORT = 0
+HOST_ADDRESS = "18.198.188.151"
+PORT = 21883
 
 
 def test_single_message():
