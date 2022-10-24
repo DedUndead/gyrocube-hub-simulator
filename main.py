@@ -5,26 +5,29 @@
 import time
 import random
 
-from communication.messages import CubeJoinedSignal, CubeDisconnectedSignal, CubeFlippedSignal, CubeConfigIndication
+from communication.messages import (
+    CubeJoinedSignal,
+    CubeDisconnectedSignal,
+    CubeFlippedSignal,
+    CubeConfigIndication,
+)
 from communication.mqtt_handler import MqttHandler
 from testing.utils import Network
 
 
-HOST_ADDRESS = "18.198.188.151"
-PORT = 21883
-
-
 def test_single_message():
-    """ Template for sending single messages """
+    """Template for sending single messages"""
     # See message constructors in communication.messages
     message = CubeFlippedSignal(cube_id=0xAA, old=1, new=5)
 
     MqttHandler.tx_single(HOST_ADDRESS, message)
 
 
-def test_cube_flipping_scenarion(number_of_cubes: int,
-                                 min_gap_between_transmissions: int,
-                                 max_gap_between_transmissions: int):
+def test_cube_flipping_scenarion(
+    number_of_cubes: int,
+    min_gap_between_transmissions: int,
+    max_gap_between_transmissions: int,
+):
     """
     Cube flipping scenaraio starts with filled network of specified size.
     Cubes are periodically flipped.
@@ -49,12 +52,16 @@ def test_cube_flipping_scenarion(number_of_cubes: int,
         mqtt.publish(CubeFlippedSignal(cube.id, old_side, new_side))
         mqtt.publish(CubeConfigIndication(cube.id, cube.side, cube.config))
 
-        time.sleep(random.randint(min_gap_between_transmissions, max_gap_between_transmissions))
+        time.sleep(
+            random.randint(min_gap_between_transmissions, max_gap_between_transmissions)
+        )
 
 
-def test_active_scenario(number_of_cubes: int,
-                         min_gap_between_transmissions: int,
-                         max_gap_between_transmissions: int):
+def test_active_scenario(
+    number_of_cubes: int,
+    min_gap_between_transmissions: int,
+    max_gap_between_transmissions: int,
+):
     """
     Active scenaraio starts with empty network.
     At some point, cube will join the network.
@@ -66,7 +73,7 @@ def test_active_scenario(number_of_cubes: int,
     :param max_gap_between_transmissions: Maximum time-gap between transmissions
     """
     network = Network(size=number_of_cubes)
-    mqtt = MqttHandler(HOST_ADDRESS, PORT)
+    mqtt = MqttHandler(HOST_ADDRESS, PORT, USERNAME, PASSWORD)
 
     while True:
         # Random join event
@@ -76,7 +83,9 @@ def test_active_scenario(number_of_cubes: int,
             print("EVENT: CUBE JOINED NETWORK")
             new_cube = network.join()
             mqtt.publish(CubeJoinedSignal(new_cube.id))
-            mqtt.publish(CubeConfigIndication(new_cube.id, new_cube.side, new_cube.config))
+            mqtt.publish(
+                CubeConfigIndication(new_cube.id, new_cube.side, new_cube.config)
+            )
 
         # Random exit event
         # <- CubeDisconnected signal to /network
@@ -98,9 +107,15 @@ def test_active_scenario(number_of_cubes: int,
             mqtt.publish(CubeFlippedSignal(cube.id, old_side, new_side))
             mqtt.publish(CubeConfigIndication(cube.id, cube.side, cube.config))
 
-        time.sleep(random.randint(min_gap_between_transmissions, max_gap_between_transmissions))
+        time.sleep(
+            random.randint(min_gap_between_transmissions, max_gap_between_transmissions)
+        )
 
 
 if __name__ == "__main__":
-    test_active_scenario(number_of_cubes=3, min_gap_between_transmissions=2, max_gap_between_transmissions=5)
-    #test_cube_flipping_scenarion(number_of_cubes=1, min_gap_between_transmissions=2, max_gap_between_transmissions=5)
+    test_active_scenario(
+        number_of_cubes=2,
+        min_gap_between_transmissions=10,
+        max_gap_between_transmissions=15,
+    )
+    # test_cube_flipping_scenarion(number_of_cubes=1, min_gap_between_transmissions=2, max_gap_between_transmissions=5)
