@@ -9,7 +9,8 @@ from typing import Optional
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 
-from communication.messages import MqttUnknownMessageError, MqttTopic, MessageTag, MessageType, Message
+from communication.messages import MqttUnknownMessageError, MqttTopic, MessageTag, MessageType, Message, \
+    CubeConfigUpdateResponse
 
 
 def _on_connect(client, userdata, flags, rc):
@@ -49,7 +50,9 @@ def _on_message(client, userdata, message):
         client.publish(MqttTopic.ERROR, MqttUnknownMessageError())
         return
 
-    # TODO: Handle requests
+    # Echo cube update response
+    if parsed_tag == MessageTag.CUBE_UPDATE_CONFIG_REQ:
+        client.publish(MqttTopic.CONFIG, CubeConfigUpdateResponse())
 
 
 def _on_publish(client, userdata, mid):
